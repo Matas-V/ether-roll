@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.main {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #313740;
+}
+
+.roulette-con {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  max-width: 960px;
+  padding: 30px 0;
+  background-color: #1a1e239f;
+  border-radius: 20px;
+}
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+}
+
+.title-coin {
+  font-size: 30px;
+}
+
+.marker {
+  border: solid 2px grey;
+  position: absolute;
+  height: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+}
