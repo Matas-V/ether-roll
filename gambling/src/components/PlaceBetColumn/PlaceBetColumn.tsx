@@ -19,16 +19,18 @@ const StyledButton = styled(Button)<StyledButtonProps>((props) => ({
 interface PlaceBetColumnProps {
   color: string,
   betters: [],
+  handleBet: (color: string, amount: number) => void,
+  betAmount: number,
 };
 
-export const PlaceBetColumn = ({ color, betters }: PlaceBetColumnProps) => {
+export const PlaceBetColumn = ({ color, betters, handleBet, betAmount }: PlaceBetColumnProps) => {
   return (
     <Box display="flex" flexDirection="column">
       <Box display="flex" alignItems="center" my={1} gap={5} sx={{ bgcolor: "#1a1e239f", px: 10, py: 2, borderRadius: "10px" }}>
         <Avatar sx={{ bgcolor: color }}> </Avatar>
         <Typography variant='body1' color="white">Win {color === "green" ? 14 : 2}x</Typography>
       </Box>
-      <StyledButton bgColor={color} onClick={() => {}} variant="contained">Place Bet</StyledButton>
+      <StyledButton bgColor={color} onClick={() => handleBet(color, betAmount)} variant="contained">Place Bet</StyledButton>
       <Box my={1}>
         <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ bgcolor: "#1a1e239f", borderRadius: "10px", my: 1, py: 1 }}>
           <Box display="flex">

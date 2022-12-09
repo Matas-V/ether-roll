@@ -1,7 +1,11 @@
-import { Tooltip, Avatar, Container, Typography, IconButton, Toolbar, Box, AppBar } from '@mui/material';
+import { Tooltip, Avatar, Container, Typography, IconButton, Toolbar, Box, AppBar, Button } from '@mui/material';
 import { IoDiceOutline } from 'react-icons/io5';
 
-export const NavBar = () => {
+interface NavBarProps {
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+};
+
+export const NavBar = ({ setOpenModal }: NavBarProps) => {
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#1d2126' }}>
       <Container maxWidth="xl">
@@ -27,10 +31,12 @@ export const NavBar = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+          <Box display="flex" gap={2}>
+            <Button color="error" variant='contained' onClick={() => setOpenModal(true)}>Add funds</Button>
+            <Button color="success" variant='contained' onClick={() => {}}>Withdraw</Button>
+            <Tooltip title="Open profile">
               <IconButton onClick={() => {}} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="" />
               </IconButton>
             </Tooltip>
           </Box>

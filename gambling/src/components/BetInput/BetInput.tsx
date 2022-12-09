@@ -1,5 +1,17 @@
 import { OutlinedInput, Button, InputAdornment, ButtonProps, OutlinedInputProps } from "@mui/material";
 import { styled } from '@mui/material/styles';
+import { FaEthereum } from "react-icons/fa";
+
+interface BetInputProps {
+  betAmount: number,
+  setBetAmount: React.Dispatch<React.SetStateAction<number>>,
+  balance: string,
+}
+
+interface CustomEndAdornmentProps {
+  setBetAmount: React.Dispatch<React.SetStateAction<number>>,
+  balance: string,
+};
 
 const StyledOutlinedInput = styled(OutlinedInput)<OutlinedInputProps>(() => ({
   backgroundColor: "inherit",
@@ -33,27 +45,28 @@ const StyledClearButton = styled(Button)<ButtonProps>(() => ({
   }
 }));
 
-const CustomEndAdornment = () => (
+const CustomEndAdornment = ({ setBetAmount, balance }: CustomEndAdornmentProps) => (
   <>
-    <StyledClearButton onClick={() => {}} variant="text">Clear</StyledClearButton>
-    <StyledEndAdornment onClick={() => {}}>+1</StyledEndAdornment>
-    <StyledEndAdornment onClick={() => {}}>+10</StyledEndAdornment>
-    <StyledEndAdornment onClick={() => {}}>+100</StyledEndAdornment>
-    <StyledEndAdornment onClick={() => {}}>Max</StyledEndAdornment>
+    <StyledClearButton onClick={() => setBetAmount(0)} variant="text">Clear</StyledClearButton>
+    <StyledEndAdornment onClick={() => setBetAmount((prev) => prev ? prev + 0.5 : 0.5)}>+0.5</StyledEndAdornment>
+    <StyledEndAdornment onClick={() => setBetAmount((prev) => prev ? prev + 1 : 1)}>+1</StyledEndAdornment>
+    <StyledEndAdornment onClick={() => setBetAmount((prev) => prev ? prev + 10 : 10)}>+10</StyledEndAdornment>
+    <StyledEndAdornment onClick={() => setBetAmount(parseFloat(balance))}>Max</StyledEndAdornment>
   </>
 );
 
-export const BetInput = () => {
+export const BetInput = ({ betAmount, setBetAmount, balance }: BetInputProps) => {
   return (
     <StyledOutlinedInput
       id="outlined-adornment"
       className="test"
+      startAdornment={<FaEthereum style={{ marginRight: '5px', fontSize: '1.5rem' }} />}
       type="number"
-      defaultValue={1}
-      onChange={() => {}}
+      value={betAmount.toString()}
+      onChange={(e) => setBetAmount(parseFloat(e.target.value))}
       endAdornment={
         <InputAdornment position="end">
-          <CustomEndAdornment />
+          <CustomEndAdornment balance={balance} setBetAmount={setBetAmount} />
         </InputAdornment>
       }
     />

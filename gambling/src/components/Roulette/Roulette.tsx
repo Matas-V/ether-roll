@@ -14,6 +14,9 @@ interface RouletteProps {
 }
 
 export const Roulette = ({ rolledNumber }: RouletteProps) => {
+
+  const position = ROULETTE_NUMBERS.indexOf(rolledNumber);
+
   return (
     <Box className="roulette-con">
       {ROULETTE_NUMBERS.map((number: number) => (
