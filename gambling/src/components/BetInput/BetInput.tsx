@@ -48,6 +48,7 @@ const StyledClearButton = styled(Button)<ButtonProps>(() => ({
 const CustomEndAdornment = ({ setBetAmount, balance }: CustomEndAdornmentProps) => (
   <>
     <StyledClearButton onClick={() => setBetAmount(0)} variant="text">Clear</StyledClearButton>
+    <StyledEndAdornment onClick={() => setBetAmount((prev) => prev ? prev + 0.25 : 0.25)}>+0.25</StyledEndAdornment>
     <StyledEndAdornment onClick={() => setBetAmount((prev) => prev ? prev + 0.5 : 0.5)}>+0.5</StyledEndAdornment>
     <StyledEndAdornment onClick={() => setBetAmount((prev) => prev ? prev + 1 : 1)}>+1</StyledEndAdornment>
     <StyledEndAdornment onClick={() => setBetAmount((prev) => prev ? prev + 10 : 10)}>+10</StyledEndAdornment>

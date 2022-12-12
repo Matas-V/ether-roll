@@ -3,9 +3,11 @@ import { IoDiceOutline } from 'react-icons/io5';
 
 interface NavBarProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+  userAddress: string,
+  handleWithdraw: () => void,
 };
 
-export const NavBar = ({ setOpenModal }: NavBarProps) => {
+export const NavBar = ({ setOpenModal, userAddress, handleWithdraw }: NavBarProps) => {
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#1d2126' }}>
       <Container maxWidth="xl">
@@ -33,10 +35,10 @@ export const NavBar = ({ setOpenModal }: NavBarProps) => {
 
           <Box display="flex" gap={2}>
             <Button color="error" variant='contained' onClick={() => setOpenModal(true)}>Add funds</Button>
-            <Button color="success" variant='contained' onClick={() => {}}>Withdraw</Button>
+            <Button color="success" variant='contained' onClick={() => handleWithdraw()}>Withdraw</Button>
             <Tooltip title="Open profile">
               <IconButton onClick={() => {}} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="" />
+                <Avatar alt="Remy Sharp" sx={{ border: 'solid 1px white' }} src={`https://avatars.dicebear.com/api/personas/:${userAddress}.svg`} />
               </IconButton>
             </Tooltip>
           </Box>

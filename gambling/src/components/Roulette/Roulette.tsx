@@ -1,13 +1,8 @@
 import { Box } from "@mui/material";
+import { getColor } from "../../utils";
 import { Square } from "../index";
 
 const ROULETTE_NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-
-const getColor = (num: number) => {
-  if (num == 0) return "green";
-  else if (num % 2) return "black";
-  else return "red";
-};
 
 interface RouletteProps {
   rolledNumber: number,

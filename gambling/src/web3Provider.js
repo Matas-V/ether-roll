@@ -1,7 +1,10 @@
 import Web3 from "web3";
 import RouletteJSON from "../../solidity/build/contracts/Roulette.json";
 
-const contract_address = "0xf85852B6273080aA172C1cF4931bf6B0Ceb41E34";
+// address from deployed contract in remix
+export const ganacheIndexes = [0,1,2,3,4,5,6,7,8,9];
+const contract_address = "0xBf98F04CA2e78566fBBD5c71ea20E89B98A1d1dB";
+export const manager_address = "0x40d138898a40dbF30B06527BfAadf4FAe3fCa729";
 export const web3 = new Web3(window.ethereum.currentProvider || "http://127.0.0.1:8545");
 web3.setProvider(new web3.providers.HttpProvider("http://127.0.0.1:8545"));
 
