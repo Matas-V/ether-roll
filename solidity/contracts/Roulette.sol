@@ -6,10 +6,7 @@ contract Roulette {
     uint256 immutable ROULETTE_NUMBER_COUNT = 14;
     uint256[] spinsHistory;
     address[] players;
-    address[] redBetters;
-    address[] blackBetters;
-    address[] greenBetters;
-    bool[15] isNumberRed = [false, true, false, true, false, true, false, true, false, true, false, false, true, false, true];
+    bool[15] isNumberRed = [false, true, true, true, true, true, true, true, false, false, false, false, false, false, false];
     
     constructor() {
         bankAddress = msg.sender;
@@ -50,7 +47,6 @@ contract Roulette {
         gameRounds[msg.sender].betColor = color;
         gameRounds[msg.sender].player = msg.sender;
         registeredFunds[msg.sender] -= amount;
-
     }
 
     function getPlayers() public view returns(address [] memory) {
@@ -66,10 +62,6 @@ contract Roulette {
             approvedPlayer[msg.sender] = true;
             players.push(msg.sender);
         }
-    }
-
-    function getBetters() public view returns(address[] memory, address[] memory, address[] memory){
-        return (redBetters, blackBetters, greenBetters);
     }
 
     function compareStrings(string memory a, string memory b) private pure returns (bool) {
@@ -97,10 +89,6 @@ contract Roulette {
         if (number == 0) color = "green";
         else if (isNumberRed[number]) color = "red";
         else color = "black";
-
-        // delete redBetters;
-        // delete blackBetters;
-        // delete greenBetters;
 
         for (uint256 i=0; i<players.length; i++) {
             address player = players[i];

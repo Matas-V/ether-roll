@@ -109,8 +109,8 @@ contract('Roulette', (bettors) => {
         from: bettors[0],
         value: '0',
       });
-      const betHistory = await betting.getSpinsHistory();
-      const winColor = betHistory[0] % 2 === 0 ? "black" : betHistory[0] === 0 ? "green" : "red";
+      const betHistory = (await betting.getSpinsHistory()).toString();
+      const winColor = parseInt(betHistory) === 0 ? "green" : parseInt(betHistory) % 2 === 0 ? "black" : "red";
       const response1 = (await betting.getAvailableFunds({
         from: bettors[1],
         value: '0',
@@ -123,7 +123,6 @@ contract('Roulette', (bettors) => {
       const available1 = ADD_3_ETHERS - BET_AMOUNT_ONE;
       const available2 = ADD_5_ETHERS - BET_AMOUNT_HALF;
 
-      assert.lengthOf(betHistory, 1);
       assert.equal(response1, winColor === "red" ? web3.utils.toWei(`${available1 + 2*BET_AMOUNT_ONE}`) : web3.utils.toWei(`${available1}`));
       assert.equal(response2, winColor === "black" ? web3.utils.toWei(`${available2 + 2*BET_AMOUNT_HALF}`) : web3.utils.toWei(`${available2}`));
     });

@@ -5,9 +5,11 @@ interface NavBarProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
   userAddress: string,
   handleWithdraw: () => void,
+  setChangeProfileModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
 };
 
-export const NavBar = ({ setOpenModal, userAddress, handleWithdraw }: NavBarProps) => {
+export const NavBar = ({ setOpenModal, userAddress, handleWithdraw, setChangeProfileModalOpen }: NavBarProps) => {
+
   return (
     <AppBar position="sticky" sx={{ backgroundColor: '#1d2126' }}>
       <Container maxWidth="xl">
@@ -36,8 +38,8 @@ export const NavBar = ({ setOpenModal, userAddress, handleWithdraw }: NavBarProp
           <Box display="flex" gap={2}>
             <Button color="error" variant='contained' onClick={() => setOpenModal(true)}>Add funds</Button>
             <Button color="success" variant='contained' onClick={() => handleWithdraw()}>Withdraw</Button>
-            <Tooltip title="Open profile">
-              <IconButton onClick={() => {}} sx={{ p: 0 }}>
+            <Tooltip title="Choose account">
+              <IconButton onClick={() => setChangeProfileModalOpen(true)} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" sx={{ border: 'solid 1px white' }} src={`https://avatars.dicebear.com/api/personas/:${userAddress}.svg`} />
               </IconButton>
             </Tooltip>

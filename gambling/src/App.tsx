@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { Box, Container, Avatar, Typography, Select, MenuItem, Button } from '@mui/material';
+import { Box, Container, Avatar, Typography, MenuItem, Button, Snackbar, Alert  } from '@mui/material';
 import { FaEthereum } from "react-icons/fa";
-import { Roulette, NavBar, TimeLine, PlaceBetColumn, BetInput, AddFundsModal, LoginModal } from './components';
+import { Roulette, NavBar, PlaceBetColumn, BetInput, AddFundsModal, LoginModal, ChangeAccountModal } from './components';
 import { Roulette as RouletteWeb, web3, ganacheIndexes, manager_address } from "./web3Provider.js";
-import { getColor, betInfoAddToState, initialBetInfoState } from "./utils";
+import { getColor, betInfoAddToState, initialBetInfoState, handleRoll } from "./utils";
 import './App.css';
 
 export interface betsStateProps {
@@ -18,25 +18,20 @@ export interface BetByColorState {
   values: number[],
 }
 
-// async function getAccount(index: number) {
-//   const accounts = await web3.eth.getAccounts();
-//   return await accounts[index];
-// }
-
-// ethereum.on('accountsChanged', function (accounts) {
-//   getAccount();
-// })
-
 function App() {
   const [balance, setBalance] = useState("0");
   const [addFundsModalOpen, setAddFundsModalOpen] = useState(false);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [changeProfileModalOpen, setChangeProfileModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(true);
   const [betAmount, setBetAmount] = useState(0);
   const [index, setIndex] = useState(0);
   const [accounts, setAccounts] = useState([]);
   const [activePlayers, setActivePlayers] = useState([]);
   const [bettersColumns, setBettersColumns] = useState<betsStateProps>({} as betsStateProps);
   const [historyOfRolls, setHistoryOfRolls] = useState([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleIndex = (i: number) => setIndex(i);
 
   const getPlayers = async () => {
     try {
@@ -68,8 +63,10 @@ function App() {
         value: '0',
         gas: 3000000,
       });
-      getRollsHistory();
+      const response = await RouletteWeb.methods.getSpinsHistory().call();
       setBettersColumns(initialBetInfoState);
+      setHistoryOfRolls(response);
+      handleRoll(parseInt(response[response.length-1]));
     } catch (error) {
       console.log("SPIN ERROR", error);
     }
@@ -78,16 +75,17 @@ function App() {
   const getAccounts = async () => {
     try {
       const accounts = await web3.eth.getAccounts();
+      console.log(accounts);
       setAccounts(accounts);
     } catch (error) {
       console.log("ACCOUNTS ERROR", error);
     }
   }
 
-  const login = async () => {
+  const login = async (i: number) => {
     try {
       await RouletteWeb.methods.start().send({
-        from: accounts[index],
+        from: accounts[i],
         value: '0',
       });
       getPlayers();
@@ -137,6 +135,7 @@ function App() {
         from: accounts[index],
         value: '0',
       });
+      setOpenSnackbar(true);
       getBalance();
     } catch (error) {
       console.log("WITHDRAW ETHER ERROR", error);
@@ -155,6 +154,31 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    getAccounts();
+    getRollsHistory();
+    getPlayers();
+    formatBettersByBets();
+  }, []);
+
+  useEffect(() => {
+    getPlayers();
+    if (activePlayers.includes(accounts[index])) {
+      setLoginModalOpen(false);
+    }
+    getBalance();
+  }, [index]);
+
+  // useEffect(() => {
+  //   if (window.ethereum) {
+  //     console.log("THE WINNER");
+  //     window.ethereum.request({method: "eth_requestAccounts"})
+  //       .then(result => console.log("DATA: ", result));
+  //   } else {
+  //     console.info("LOOOOOSER");
+  //   }
+  // }, []);
+
   // useEffect(() => {
   //   if(window.ethereum) {
   //     window.ethereum.on('chainChanged', () => {
@@ -165,55 +189,35 @@ function App() {
   //     })
   // })
 
-  useEffect(() => {
-    if (!activePlayers.includes(accounts[index])) {
-      setLoginModalOpen(true);
-    }
-    getBalance();
-  }, [index]);
-
-  useEffect(() => {
-    getAccounts();
-    getRollsHistory();
-    getBalance();
-    getPlayers();
-    formatBettersByBets();
-  }, []);
-
   return (
     <div className='main'>
-      <NavBar setOpenModal={setAddFundsModalOpen} userAddress={accounts[index]} handleWithdraw={withdrawEther} />
+      <NavBar setOpenModal={setAddFundsModalOpen} userAddress={accounts[index]} handleWithdraw={withdrawEther} setChangeProfileModalOpen={setChangeProfileModalOpen} />
       <Container sx={{ display: 'flex', alignItems: "center", my: 5, flexDirection: 'column' }}>
         <Box maxWidth={960} width={'100%'} display="flex" justifyContent="space-between" px={2}>
           <Box display="flex" flexDirection="column">
             <Typography align="left" color="white" variant="subtitle2">Last 5:</Typography>
             <Box display="flex" flexDirection="row-reverse" gap={1} my={1}>
-              {historyOfRolls.length < 5 ? [0,1,2,3,4].map((i: number) => historyOfRolls[i] ? 
-                (<Avatar key={i} sx={{ bgcolor: getColor(historyOfRolls[i]), width: '30px', height: '30px' }}>{historyOfRolls[i]}</Avatar>) :
+              {historyOfRolls.length < 5 ? [4,3,2,1,0].map((i: number) => historyOfRolls[i] ? 
+                (<Avatar key={i} sx={{ bgcolor: getColor(parseInt(historyOfRolls[i])), width: '30px', height: '30px' }}>{historyOfRolls[i]}</Avatar>) :
                 (<Avatar key={i} sx={{ bgcolor: 'green', width: '30px', height: '30px' }}>0</Avatar>)
               ) : (
-                historyOfRolls.slice(historyOfRolls.length - 5, historyOfRolls.length).map((num: number, index: number) => (
-                  <Avatar key={index} sx={{ bgcolor: getColor(num), width: '30px', height: '30px' }}>{num}</Avatar>
+                historyOfRolls.slice(historyOfRolls.length - 5, historyOfRolls.length).map((num: string, index: number) => (
+                  <Avatar key={index} sx={{ bgcolor: getColor(parseInt(num)), width: '30px', height: '30px' }}>{num}</Avatar>
                 ))
               )}
             </Box>
           </Box>
-          <Select
-            value={index}
-            label="Index"
-            onChange={(e) => setIndex(e.target.value as number)}
-          >
-            {ganacheIndexes.map((item: number) => (<MenuItem key={item} value={item}>{item}</MenuItem>))}
-          </Select>
           <Box display="flex" alignItems="center" gap={1} sx={{ color: 'white', fontSize: '1.5rem' }}>
             Balance
             <FaEthereum />
             {balance}
           </Box>
         </Box>
-        <Roulette rolledNumber={10} />
+        <Roulette />
         <Box sx={{ maxWidth: "960px", width: "100%", my: 5 }}>
-          <Button sx={{ visibility: `${accounts[index] !== manager_address && 'hidden'}`, width: '200px' }} color="warning" variant='contained' onClick={() => spinRoulette()}>SPIN</Button>
+          <Button sx={{ visibility: `${accounts[index] !== manager_address && 'hidden'}`, width: '200px' }} color="warning" variant='contained' onClick={() => {
+            spinRoulette();
+          }}>SPIN</Button>
         </Box>
         <BetInput balance={balance} betAmount={betAmount} setBetAmount={setBetAmount} />
         <Box display="flex" gap={5}>
@@ -223,7 +227,16 @@ function App() {
         </Box>
       </Container>
       <AddFundsModal isOpen={addFundsModalOpen} handleClose={setAddFundsModalOpen} handleAddFunds={increaseFunds} />
-      <LoginModal isOpen={loginModalOpen} handleClose={setLoginModalOpen} handleLogin={login} />
+      {/* <LoginModal isOpen={loginModalOpen} handleClose={setLoginModalOpen} handleLogin={login} /> */}
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity='success'>Succesfull withdraw. Congratulations on your winnings!</Alert>
+      </Snackbar>
+      <ChangeAccountModal handleLogin={login} accounts={accounts} isOpen={changeProfileModalOpen} handleClose={() => setChangeProfileModalOpen(false)} setAccount={handleIndex} />
     </div>
   )
 }
