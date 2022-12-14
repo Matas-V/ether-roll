@@ -34,3 +34,11 @@ Sukurtas puslapis, skirtas žaisti su savo turima ethereum valiuta panaudojant W
 ## Testavimas (truffle test komanda)
 - Buvo sukurti unit testai kontraktui patikrinti:<br/><br/>
 ![image](https://user-images.githubusercontent.com/80633152/207638767-8ce98c5f-6c69-44dc-a37e-391d41915a84.png)
+
+## Testavimas Goerli tinkle
+![image](https://user-images.githubusercontent.com/80633152/207736431-c2bab6b6-f3c7-41e6-87df-6278acd16ff3.png)
+
+- Kontrakto sukūrimo tranzakcija:
+https://goerli.etherscan.io/tx/0xe7c307a96aae5cd21707db119b43677757378975b69fc7654cd892b0e3d7eda7
+- Visos vykdytos tranzakcijos:<br/>
+https://goerli.etherscan.io/address/0xCb1Dbf905Cc1d68c69D8c4D6Ee453DD925977bFB
