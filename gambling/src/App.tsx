@@ -75,7 +75,6 @@ function App() {
   const getAccounts = async () => {
     try {
       const accounts = await web3.eth.getAccounts();
-      console.log(accounts);
       setAccounts(accounts);
     } catch (error) {
       console.log("ACCOUNTS ERROR", error);
